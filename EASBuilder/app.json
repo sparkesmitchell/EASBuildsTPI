@@ -13,14 +13,15 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.yourname.easbuilder"
+      "bundleIdentifier": "com.sparkesmitchell.easbuilder",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0A0A0F"
       },
-      "package": "com.yourname.easbuilder"
+      "package": "com.sparkesmitchell.easbuilder"
     },
     "plugins": [
       "expo-router",
@@ -29,6 +30,11 @@
     "scheme": "easbuilder",
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9bf188bd-1a82-4b0b-b9e4-193819a1b75a"
+      }
     }
   }
 }
