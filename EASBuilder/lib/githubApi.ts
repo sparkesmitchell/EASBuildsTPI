@@ -39,7 +39,7 @@ export async function triggerWorkflow(
   profile: string
 ): Promise<void> {
   await ghFetch(
-    `/repos/${owner}/${repo}/actions/workflows/eas-build.yml/dispatches`,
+    `/repos/${owner}/${repo}/actions/workflows/eas-build-tpi.yml/dispatches`,
     token,
     {
       method: 'POST',
@@ -55,7 +55,7 @@ export async function getLatestWorkflowRun(
   branch: string
 ): Promise<WorkflowRun | null> {
   const data = await ghFetch(
-    `/repos/${owner}/${repo}/actions/workflows/eas-build.yml/runs?branch=${encodeURIComponent(branch)}&per_page=1&event=workflow_dispatch`,
+    `/repos/${owner}/${repo}/actions/workflows/eas-build-tpi.yml/runs?branch=${encodeURIComponent(branch)}&per_page=1&event=workflow_dispatch`,
     token
   );
   return data?.workflow_runs?.[0] ?? null;
