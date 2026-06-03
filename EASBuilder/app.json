@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "EAS Builder",
-    "slug": "eas-builder",
+    "name": "EAS Build TPI",
+    "slug": "easbuildstpi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,7 +14,9 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.sparkesmitchell.easbuilder",
-      "buildNumber": "1"
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -31,6 +33,7 @@
     "experiments": {
       "typedRoutes": true
     },
+    "owner": "mitchellsparkes",
     "extra": {
       "eas": {
         "projectId": "9bf188bd-1a82-4b0b-b9e4-193819a1b75a"

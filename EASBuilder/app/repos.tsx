@@ -9,13 +9,14 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { getGitHubToken, getExpoToken, clearAll } from '@/lib/storage';
 import { getRepos, getBranches, GitHubRepo } from '@/lib/githubApi';
 import { Colors, Radius, Spacing } from '@/lib/theme';
 import { SectionLabel, EmptyState, Divider } from '@/components/UI';
 
 export default function ReposScreen() {
+  const navigation = useNavigation();
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -25,8 +26,29 @@ export default function ReposScreen() {
   const [loadingBranches, setLoadingBranches] = useState(false);
 
   useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleSignOut} hitSlop={12}>
+          <Text style={{ color: Colors.textSecondary, fontSize: 14 }}>Sign out</Text>
+        </TouchableOpacity>
+      ),
+    });
     loadRepos();
   }, []);
+
+  async function handleSignOut() {
+    Alert.alert('Sign out', 'Clear saved tokens and return to setup?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign out',
+        style: 'destructive',
+        onPress: async () => {
+          await clearAll();
+          router.replace('/setup');
+        },
+      },
+    ]);
+  }
 
   async function loadRepos() {
     const token = await getGitHubToken();

@@ -14,7 +14,7 @@ async function easQuery(query: string, variables: Record<string, any>, token: st
   return json.data;
 }
 
-export async function getExpoApps(token: string, accountName: string) {
+export async function getExpoApps(token: string, accountNames: string[]) {
   const query = `
     query GetApps($accountName: String!) {
       account {
@@ -24,16 +24,19 @@ export async function getExpoApps(token: string, accountName: string) {
             name
             slug
             fullName
-            latestReleaseForReleaseChannel(releaseChannel: "default") {
-              createdAt
-            }
           }
         }
       }
     }
   `;
-  const data = await easQuery(query, { accountName }, token);
-  return data.account.byName.apps as ExpoApp[];
+  const results = await Promise.all(
+    accountNames.map(accountName =>
+      easQuery(query, { accountName }, token)
+        .then(data => data.account.byName.apps as ExpoApp[])
+        .catch(() => [] as ExpoApp[])
+    )
+  );
+  return results.flat();
 }
 
 export async function getCurrentUser(token: string) {
@@ -53,32 +56,6 @@ export async function getCurrentUser(token: string) {
   return data.meUserActor;
 }
 
-export async function triggerBuild(
-  token: string,
-  appId: string,
-  platform: 'IOS' | 'ANDROID',
-  profile: string,
-  autoSubmit: boolean
-) {
-  const query = `
-    mutation TriggerBuild($appId: ID!, $platform: AppPlatform!, $profile: String!, $autoSubmit: Boolean) {
-      build(
-        appId: $appId,
-        platform: $platform,
-        profile: $profile,
-        autoSubmit: $autoSubmit
-      ) {
-        id
-        status
-        platform
-        createdAt
-        buildProfile
-      }
-    }
-  `;
-  const data = await easQuery(query, { appId, platform, profile, autoSubmit }, token);
-  return data.build as Build;
-}
 
 export async function getBuildStatus(token: string, buildId: string) {
   const query = `

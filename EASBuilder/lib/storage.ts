@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 const EXPO_TOKEN_KEY = 'expo_access_token';
 const GITHUB_TOKEN_KEY = 'github_access_token';
 const EXPO_ACCOUNT_KEY = 'expo_account_username';
+const EXPO_ACCOUNTS_KEY = 'expo_account_names';
 
 export async function saveExpoToken(token: string) {
   await SecureStore.setItemAsync(EXPO_TOKEN_KEY, token);
@@ -28,8 +29,19 @@ export async function getExpoUsername(): Promise<string | null> {
   return SecureStore.getItemAsync(EXPO_ACCOUNT_KEY);
 }
 
+export async function saveExpoAccounts(accounts: string[]) {
+  await SecureStore.setItemAsync(EXPO_ACCOUNTS_KEY, JSON.stringify(accounts));
+}
+
+export async function getExpoAccounts(): Promise<string[]> {
+  const val = await SecureStore.getItemAsync(EXPO_ACCOUNTS_KEY);
+  if (!val) return [];
+  try { return JSON.parse(val); } catch { return []; }
+}
+
 export async function clearAll() {
   await SecureStore.deleteItemAsync(EXPO_TOKEN_KEY);
   await SecureStore.deleteItemAsync(GITHUB_TOKEN_KEY);
   await SecureStore.deleteItemAsync(EXPO_ACCOUNT_KEY);
+  await SecureStore.deleteItemAsync(EXPO_ACCOUNTS_KEY);
 }

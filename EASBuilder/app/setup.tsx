@@ -4,6 +4,8 @@ import {
   Text,
   TextInput,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   Linking,
@@ -14,6 +16,7 @@ import {
   saveExpoToken,
   saveGitHubToken,
   saveExpoUsername,
+  saveExpoAccounts,
 } from '@/lib/storage';
 import { getCurrentUser } from '@/lib/easApi';
 import { getGitHubUser } from '@/lib/githubApi';
@@ -41,6 +44,7 @@ export default function SetupScreen() {
       await saveExpoToken(expoToken.trim());
       await saveGitHubToken(githubToken.trim());
       await saveExpoUsername(expoUser.username);
+      await saveExpoAccounts(expoUser.accounts.map((a: { name: string }) => a.name));
 
       Alert.alert(
         'Connected!',
@@ -55,13 +59,17 @@ export default function SetupScreen() {
   }
 
   return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
       <Text style={styles.description}>
-        EAS Builder needs read access to your repos and the ability to trigger builds on your behalf.
+        EAS Build TPI needs read access to your repos and the ability to trigger builds on your behalf.
         Tokens are stored securely on your device.
       </Text>
 
@@ -113,6 +121,7 @@ export default function SetupScreen() {
         style={{ marginTop: Spacing.xl, width: '100%' }}
       />
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
