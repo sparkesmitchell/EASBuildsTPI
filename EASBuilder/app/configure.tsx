@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { getGitHubToken } from '@/lib/storage';
-import { triggerWorkflow } from '@/lib/githubApi';
+import { triggerWorkflow, createWorkflowFile } from '@/lib/githubApi';
 import { Colors, Radius, Spacing } from '@/lib/theme';
 import { SectionLabel, Card, Divider } from '@/components/UI';
 
@@ -48,8 +48,23 @@ export default function ConfigureScreen() {
       if (msg.includes('404') || msg.toLowerCase().includes('not found')) {
         Alert.alert(
           'Workflow not found',
-          'Add the eas-build-tpi.yml workflow file to .github/workflows/ in your repo first.\n\nSee the EAS Build TPI README for the template.',
-          [{ text: 'OK' }]
+          'The eas-build-tpi.yml workflow file is missing from this repo. Add it automatically?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Add it for me',
+              onPress: async () => {
+                const token = await getGitHubToken();
+                if (!token) return;
+                try {
+                  await createWorkflowFile(token, owner, repo);
+                  Alert.alert('Done', 'Workflow file added. You can now start the build.');
+                } catch (err: any) {
+                  Alert.alert('Failed to add workflow', err.message);
+                }
+              },
+            },
+          ]
         );
       } else {
         Alert.alert('Build failed to start', msg);

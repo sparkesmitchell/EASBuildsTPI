@@ -5,15 +5,15 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  ActivityIndicator,
   TouchableOpacity,
   Alert,
 } from 'react-native';
 import { router, useNavigation } from 'expo-router';
 import { getGitHubToken, getExpoToken, clearAll } from '@/lib/storage';
-import { getRepos, getBranches, GitHubRepo } from '@/lib/githubApi';
+import { getRepos, GitHubRepo } from '@/lib/githubApi';
 import { Colors, Radius, Spacing } from '@/lib/theme';
-import { SectionLabel, EmptyState, Divider } from '@/components/UI';
+import { SectionLabel, EmptyState } from '@/components/UI';
+
 
 export default function ReposScreen() {
   const navigation = useNavigation();
@@ -21,9 +21,6 @@ export default function ReposScreen() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedRepo, setSelectedRepo] = useState<GitHubRepo | null>(null);
-  const [branches, setBranches] = useState<string[]>([]);
-  const [selectedBranch, setSelectedBranch] = useState('');
-  const [loadingBranches, setLoadingBranches] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -63,21 +60,8 @@ export default function ReposScreen() {
     }
   }
 
-  async function selectRepo(repo: GitHubRepo) {
+  function selectRepo(repo: GitHubRepo) {
     setSelectedRepo(repo);
-    setSelectedBranch(repo.default_branch);
-    setLoadingBranches(true);
-    try {
-      const token = await getGitHubToken();
-      if (!token) return;
-      const [owner] = repo.full_name.split('/');
-      const data = await getBranches(token, owner, repo.name);
-      setBranches(data.map(b => b.name));
-    } catch {
-      setBranches([repo.default_branch]);
-    } finally {
-      setLoadingBranches(false);
-    }
   }
 
   function handleNext() {
@@ -87,7 +71,7 @@ export default function ReposScreen() {
       params: {
         repoFullName: selectedRepo.full_name,
         repoName: selectedRepo.name,
-        branch: selectedBranch,
+        branch: selectedRepo.default_branch,
       },
     });
   }
@@ -154,44 +138,13 @@ export default function ReposScreen() {
           </>
         )}
 
-        {selectedRepo && (
-          <>
-            <Divider style={{ marginTop: Spacing.xl }} />
-            <SectionLabel label="Branch" />
-            {loadingBranches ? (
-              <ActivityIndicator color={Colors.accent} size="small" />
-            ) : (
-              <View style={styles.branchList}>
-                {branches.map(b => (
-                  <TouchableOpacity
-                    key={b}
-                    onPress={() => setSelectedBranch(b)}
-                    style={[
-                      styles.branchPill,
-                      selectedBranch === b && styles.branchPillSelected,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.branchPillText,
-                        selectedBranch === b && { color: Colors.accentText },
-                      ]}
-                    >
-                      {b}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-          </>
-        )}
       </ScrollView>
 
       {selectedRepo && (
         <View style={styles.footer}>
           <TouchableOpacity style={styles.nextBtn} onPress={handleNext} activeOpacity={0.8}>
             <Text style={styles.nextBtnText}>
-              Configure build → {selectedRepo.name}:{selectedBranch}
+              Configure build → {selectedRepo.name}
             </Text>
           </TouchableOpacity>
         </View>
@@ -248,28 +201,6 @@ const styles = StyleSheet.create({
   privateBadgeText: {
     fontSize: 10,
     color: Colors.textTertiary,
-  },
-  branchList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  branchPill: {
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: Radius.full,
-    borderWidth: 0.5,
-    borderColor: Colors.border,
-    backgroundColor: Colors.bgCard,
-  },
-  branchPillSelected: {
-    borderColor: Colors.accent,
-    backgroundColor: Colors.accentDim,
-  },
-  branchPillText: {
-    fontSize: 13,
-    color: Colors.textSecondary,
-    fontFamily: 'monospace',
   },
   footer: {
     position: 'absolute',
