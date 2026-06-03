@@ -40,6 +40,9 @@ export default function IndexScreen() {
           </View>
           <Text style={styles.appName}>EAS Builder</Text>
           <Text style={styles.tagline}>Build & ship from your phone</Text>
+          <Text style={styles.disclaimer}>
+            Not affiliated with or endorsed by Expo or Expo Inc.
+          </Text>
         </View>
 
         {!checking && (
@@ -111,5 +114,11 @@ const styles = StyleSheet.create({
     color: Colors.textTertiary,
     textAlign: 'center',
     lineHeight: 18,
+  },
+  disclaimer: {
+    fontSize: 11,
+    color: Colors.textTertiary,
+    textAlign: 'center',
+    marginTop: 4,
   },
 });
