@@ -36,14 +36,15 @@ export async function triggerWorkflow(
   repo: string,
   branch: string,
   platform: string,
-  profile: string
+  profile: string,
+  autoSubmit: boolean
 ): Promise<void> {
   await ghFetch(
     `/repos/${owner}/${repo}/actions/workflows/eas-build-tpi.yml/dispatches`,
     token,
     {
       method: 'POST',
-      body: JSON.stringify({ ref: branch, inputs: { platform, profile } }),
+      body: JSON.stringify({ ref: branch, inputs: { platform, profile, auto_submit: autoSubmit ? 'true' : 'false' } }),
     }
   );
 }
@@ -72,6 +73,14 @@ const WORKFLOW_CONTENT = [
   '          - production',
   '          - preview',
   '          - development',
+  '      auto_submit:',
+  "        description: 'Auto-submit to TestFlight after build'",
+  '        required: true',
+  "        default: 'false'",
+  '        type: choice',
+  '        options:',
+  "          - 'true'",
+  "          - 'false'",
   '',
   'jobs:',
   '  build:',
@@ -97,7 +106,7 @@ const WORKFLOW_CONTENT = [
   '          token: ${{ secrets.EXPO_TOKEN }}',
   '',
   '      - name: Build',
-  '        run: eas build --platform ${{ inputs.platform }} --profile ${{ inputs.profile }} --non-interactive',
+  "        run: eas build --platform ${{ inputs.platform }} --profile ${{ inputs.profile }} --non-interactive${{ inputs.auto_submit == 'true' && ' --auto-submit' || '' }}",
 ].join('\n');
 
 export async function createWorkflowFile(token: string, owner: string, repo: string): Promise<void> {

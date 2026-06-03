@@ -38,7 +38,7 @@ export default function ConfigureScreen() {
 
     setLaunching(true);
     try {
-      await triggerWorkflow(token, owner, repo, branch, platform, profile);
+      await triggerWorkflow(token, owner, repo, branch, platform, profile, autoSubmit);
       router.replace({
         pathname: '/building',
         params: { owner, repo, branch, repoName, profile, autoSubmit: autoSubmit ? '1' : '0' },
