@@ -4,6 +4,8 @@ import {
   Text,
   TextInput,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   Linking,
@@ -55,6 +57,10 @@ export default function SetupScreen() {
   }
 
   return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -113,6 +119,7 @@ export default function SetupScreen() {
         style={{ marginTop: Spacing.xl, width: '100%' }}
       />
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

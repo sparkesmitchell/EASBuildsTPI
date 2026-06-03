@@ -24,9 +24,6 @@ export async function getExpoApps(token: string, accountName: string) {
             name
             slug
             fullName
-            latestReleaseForReleaseChannel(releaseChannel: "default") {
-              createdAt
-            }
           }
         }
       }
