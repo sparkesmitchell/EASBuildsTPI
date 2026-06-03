@@ -48,7 +48,7 @@ export default function ConfigureScreen() {
       if (msg.includes('404') || msg.toLowerCase().includes('not found')) {
         Alert.alert(
           'Workflow not found',
-          'Add the eas-build.yml workflow file to .github/workflows/ in your repo first.\n\nSee the EAS Builder README for the template.',
+          'Add the eas-build.yml workflow file to .github/workflows/ in your repo first.\n\nSee the EAS Build TPI README for the template.',
           [{ text: 'OK' }]
         );
       } else {

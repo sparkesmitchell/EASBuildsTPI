@@ -69,7 +69,7 @@ export default function SetupScreen() {
       keyboardShouldPersistTaps="handled"
     >
       <Text style={styles.description}>
-        EAS Builder needs read access to your repos and the ability to trigger builds on your behalf.
+        EAS Build TPI needs read access to your repos and the ability to trigger builds on your behalf.
         Tokens are stored securely on your device.
       </Text>
 

@@ -38,7 +38,7 @@ export default function IndexScreen() {
           <View style={styles.logoBox}>
             <Text style={styles.logoIcon}>⬡</Text>
           </View>
-          <Text style={styles.appName}>EAS Builder</Text>
+          <Text style={styles.appName}>EAS Build TPI</Text>
           <Text style={styles.tagline}>Build & ship from your phone</Text>
           <Text style={styles.disclaimer}>
             Not affiliated with or endorsed by Expo or Expo Inc.
