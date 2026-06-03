@@ -16,6 +16,7 @@ import {
   saveExpoToken,
   saveGitHubToken,
   saveExpoUsername,
+  saveExpoAccounts,
 } from '@/lib/storage';
 import { getCurrentUser } from '@/lib/easApi';
 import { getGitHubUser } from '@/lib/githubApi';
@@ -43,6 +44,7 @@ export default function SetupScreen() {
       await saveExpoToken(expoToken.trim());
       await saveGitHubToken(githubToken.trim());
       await saveExpoUsername(expoUser.username);
+      await saveExpoAccounts(expoUser.accounts.map((a: { name: string }) => a.name));
 
       Alert.alert(
         'Connected!',

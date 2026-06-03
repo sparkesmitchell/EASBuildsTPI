@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { getExpoToken, getExpoUsername } from '@/lib/storage';
+import { getExpoToken, getExpoUsername, getExpoAccounts } from '@/lib/storage';
 import { getExpoApps, triggerBuild, ExpoApp } from '@/lib/easApi';
 import { Colors, Radius, Spacing } from '@/lib/theme';
 import { SectionLabel, Card, Divider } from '@/components/UI';
@@ -34,10 +34,11 @@ export default function ConfigureScreen() {
   }, []);
 
   async function loadApps() {
-    const [token, username] = await Promise.all([getExpoToken(), getExpoUsername()]);
+    const [token, username, accounts] = await Promise.all([getExpoToken(), getExpoUsername(), getExpoAccounts()]);
     if (!token || !username) { router.replace('/setup'); return; }
+    const accountNames = accounts.length > 0 ? accounts : [username];
     try {
-      const data = await getExpoApps(token, username);
+      const data = await getExpoApps(token, accountNames);
       setApps(data);
       if (data.length > 0) setSelectedApp(data[0]);
     } catch (e: any) {
