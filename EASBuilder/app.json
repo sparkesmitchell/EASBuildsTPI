@@ -31,6 +31,7 @@
     "experiments": {
       "typedRoutes": true
     },
+    "owner": "mitchellsparkes",
     "extra": {
       "eas": {
         "projectId": "9bf188bd-1a82-4b0b-b9e4-193819a1b75a"
