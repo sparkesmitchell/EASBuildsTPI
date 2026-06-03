@@ -56,32 +56,6 @@ export async function getCurrentUser(token: string) {
   return data.meUserActor;
 }
 
-export async function triggerBuild(
-  token: string,
-  appId: string,
-  platform: 'IOS' | 'ANDROID',
-  profile: string,
-  autoSubmit: boolean
-) {
-  const query = `
-    mutation TriggerBuild($appId: ID!, $platform: AppPlatform!, $profile: String!, $autoSubmit: Boolean) {
-      build(
-        appId: $appId,
-        platform: $platform,
-        profile: $profile,
-        autoSubmit: $autoSubmit
-      ) {
-        id
-        status
-        platform
-        createdAt
-        buildProfile
-      }
-    }
-  `;
-  const data = await easQuery(query, { appId, platform, profile, autoSubmit }, token);
-  return data.build as Build;
-}
 
 export async function getBuildStatus(token: string, buildId: string) {
   const query = `
