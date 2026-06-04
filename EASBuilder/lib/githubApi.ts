@@ -125,6 +125,7 @@ export async function createWorkflowFile(token: string, owner: string, repo: str
 }
 
 
+export async function getLatestWorkflowRun(
   token: string,
   owner: string,
   repo: string,
