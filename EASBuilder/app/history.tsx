@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { router } from 'expo-router';
-import { getExpoToken, getExpoUsername } from '@/lib/storage';
+import { getExpoToken, getExpoAccounts } from '@/lib/storage';
 import { getExpoApps, getRecentBuilds, Build, ExpoApp } from '@/lib/easApi';
 import { Colors, Radius, Spacing } from '@/lib/theme';
 import { StatusBadge, SectionLabel, EmptyState } from '@/components/UI';
@@ -26,10 +26,10 @@ export default function HistoryScreen() {
   }, []);
 
   async function loadApps() {
-    const [token, username] = await Promise.all([getExpoToken(), getExpoUsername()]);
-    if (!token || !username) { router.replace('/setup'); return; }
+    const [token, accounts] = await Promise.all([getExpoToken(), getExpoAccounts()]);
+    if (!token || accounts.length === 0) { router.replace('/setup'); return; }
     try {
-      const data = await getExpoApps(token, username);
+      const data = await getExpoApps(token, accounts);
       setApps(data);
       if (data.length > 0) await selectApp(data[0], token);
     } catch (e: any) {

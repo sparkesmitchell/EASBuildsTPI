@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { router, useNavigation } from 'expo-router';
 import { getGitHubToken, getExpoToken, clearAll } from '@/lib/storage';
