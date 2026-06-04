@@ -45,10 +45,10 @@ export default function ConfigureScreen() {
       });
     } catch (e: any) {
       const msg = e.message ?? 'Failed to trigger build.';
-      if (msg.includes('404') || msg.toLowerCase().includes('not found')) {
+      if (msg.includes('404') || msg.toLowerCase().includes('not found') || msg.toLowerCase().includes('workflow_dispatch')) {
         Alert.alert(
           'Workflow not found',
-          'The eas-build-tpi.yml workflow file is missing from this repo. Add it automatically?',
+          'The eas-build-tpi.yml workflow file is missing or outdated. Add/replace it automatically?',
           [
             { text: 'Cancel', style: 'cancel' },
             {

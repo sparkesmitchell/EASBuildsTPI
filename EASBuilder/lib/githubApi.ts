@@ -110,18 +110,14 @@ const WORKFLOW_CONTENT = [
 ].join('\n');
 
 export async function createWorkflowFile(token: string, owner: string, repo: string): Promise<void> {
-  const content = btoa(WORKFLOW_CONTENT);
-  await ghFetch(
-    `/repos/${owner}/${repo}/contents/.github/workflows/eas-build-tpi.yml`,
-    token,
-    {
-      method: 'PUT',
-      body: JSON.stringify({
-        message: 'Add EAS Build TPI workflow',
-        content,
-      }),
-    }
-  );
+  const path = `/repos/${owner}/${repo}/contents/.github/workflows/eas-build-tpi.yml`;
+  const existing = await ghFetch(path, token).catch(() => null);
+  const body: Record<string, string> = {
+    message: 'Add EAS Build TPI workflow',
+    content: btoa(WORKFLOW_CONTENT),
+  };
+  if (existing?.sha) body.sha = existing.sha;
+  await ghFetch(path, token, { method: 'PUT', body: JSON.stringify(body) });
 }
 
 
